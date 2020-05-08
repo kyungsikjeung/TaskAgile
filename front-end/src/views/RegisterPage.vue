@@ -49,3 +49,48 @@
     </footer>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.container {
+  max-width: 900px;
+}
+.register-form {
+  margin-top: 50px;
+  max-width: 320px;
+}
+.logo-wrapper {
+  text-align: center;
+  margin-bottom: 40px;
+  .tagline {
+    line-height: 180%;
+    color: #666;
+  }
+  .logo {
+    max-width: 150px;
+    margin: 0 auto;
+  }
+}
+.register-form {
+  .form-group label {
+    font-weight: bold;
+    color: #555;
+  }
+  .accept-terms {
+    margin: 20px 0 40px 0;
+  }
+}
+.footer {
+  width: 100%;
+  font-size: 13px;
+  color: #666;
+  line-height: 40px;
+  border-top: 1px solid #ddd;
+  margin-top: 50px;
+  .list-inline-item {
+    margin-right: 10px;
+  }
+  a {
+    color: #666;
+  }
+}
+</style>
