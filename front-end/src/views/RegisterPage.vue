@@ -65,6 +65,9 @@
   </div>
 </template>
 <script>
+import { required, maxLength, minLength, email, alphaNum } from 'vuelidate/lib/validators'
+import registrationService from '@/services/registration'
+
 export default {
   name: 'RegisterPage',
   data: function () {
@@ -72,8 +75,25 @@ export default {
       form: { username: '', emailAddress: '', password: '' }
     }
   },
+  validations: {
+    form: {
+      username: { required, minLength: minLength(2), maxLength: maxLength(50), alphaNum },
+      emailAddress: { required, minLength: minLength(5), maxLength: maxLength(100), email },
+      password: { required, minLength: minLength(5), maxLength: maxLength(30) }
+    }
+  },
   methods: {
     submitForm () {
+      this.$v.$touch()
+      if (this.$v.$invalid) {
+
+      }
+
+      registrationService.register(this.form).then(() => {
+        this.$router.push({ name: 'LoginPage' })
+      }).catch((error) => {
+        this.errorMessage = 'Failed to register user. ' + error.message
+      })
     }
   }
 }
