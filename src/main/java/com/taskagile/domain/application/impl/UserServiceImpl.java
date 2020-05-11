@@ -18,7 +18,8 @@ import com.taskagile.domain.model.user.events.UserRegisteredEvent;
 
 /**
  * @author jk
- * Api 호출 -> intf(service.regist(RegistrationPayload.RegistrationCommand()) 의 구현부 
+ * Api 호출 -> intf(service.regist(RegistrationPayload.RegistrationCommand()) 의 구현부
+ * 구현부는 3가지 파트로 나뉨. 사용자 등록을 담당하는 RegistrationManageMent , 사용자 등록을 하면 메일을 발송하는 MailManager , DomainEventPublisher
  */
 @Service
 @Transactional
