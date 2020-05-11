@@ -34,6 +34,4 @@ public class HibernateUserRepository extends HibernateSupport implements UserRep
 		entityManager.flush();
 	}
 	
-	
-	
 }
