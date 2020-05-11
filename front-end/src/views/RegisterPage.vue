@@ -54,8 +54,8 @@
 
 <script>
 export default {
-  name: "RegisterPage"
-};
+  name: 'RegisterPage'
+}
 </script>
 
 <style lang="scss" scoped>
