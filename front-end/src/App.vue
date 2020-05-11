@@ -14,4 +14,18 @@ export default {
 html {
   font-size: 14px;
 }
+/* 에러 */
+.form-group {
+  .error {
+    line-height: 1;
+    display: none;
+    margin-top: 5px;
+  }
+}
+.field-error {
+  .error {
+    display: block;
+    color: #ff0000;
+  }
+}
 </style>

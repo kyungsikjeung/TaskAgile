@@ -3,58 +3,107 @@
     <div class="row justify-content-center">
       <div class="register-form">
         <div class="logo-wrapper">
-          <img class="logo" src="/static/images/logo.png" />
+          <img class="logo" src="/static/images/logo.png">
           <div class="tagline">Open source task management tool</div>
         </div>
-        <form>
+        <form @submit.prevent="submitForm">
+          <div v-show="errorMessage" class="alert alert-danger failed">{{ errorMessage }}</div>
           <div class="form-group">
             <label for="username">Username</label>
-            <input type="text" class="form-control" id="username" />
+            <input type="text" class="form-control" id="username" v-model="form.username">
+            <div class="field-error" v-if="$v.form.username.$dirty">
+              <div class="error" v-if="!$v.form.username.required">사용자명 입력은 필수입니다.</div>
+              <div class="error" v-if="!$v.form.username.alphaNum">사용자명은 오직 숫자와 문자만 포함할 수 있습니다.</div>
+              <div class="error" v-if="!$v.form.username.minLength">사용자명은 최소 {{$v.form.username.$params.minLength.min}}자 이상이어야 합니다.</div>
+              <div class="error" v-if="!$v.form.username.maxLength">사용자명은 최대 {{$v.form.username.$params.maxLength.max}}자 이하여야 합니다.</div>
+            </div>
           </div>
           <div class="form-group">
             <label for="emailAddress">Email address</label>
-            <input type="email" class="form-control" id="emailAddress" />
+            <input type="email" class="form-control" id="emailAddress" v-model="form.emailAddress">
+             <div class="field-error" v-if="$v.form.emailAddress.$dirty">
+              <div class="error" v-if="!$v.form.emailAddress.required">이메일 주소는 필수 입력사항입니다.</div>
+              <div class="error" v-if="!$v.form.emailAddress.email">유효한 이메일 주소가 아닙니다.</div>
+              <div class="error" v-if="!$v.form.emailAddress.maxLength">이메일 주소는 최소 {{$v.form.emailAddress.$params.maxLength.max}}자 이상이어야 합니다.</div>
+            </div>
           </div>
           <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" />
+            <input type="password" class="form-control" id="password" v-model="form.password">
+            <div class="field-error" v-if="$v.form.password.$dirty">
+              <div class="error" v-if="!$v.form.password.required">비밀번호는 필수 입력사항입니다.</div>
+              <div class="error" v-if="!$v.form.password.minLength">비밀번호는 최소 {{$v.form.password.$params.minLength.min}}자 이상이여야 합니다. </div>
+              <div class="error" v-if="!$v.form.password.maxLength">비밀번호는 최대 {{$v.form.password.$params.maxLength.max}}자 이하여야 합니다.</div>
+            </div>
           </div>
           <button type="submit" class="btn btn-primary btn-block">Create account</button>
-          <p class="accept-terms text-muted">
-            By clicking “Create account”, you agree to our
-            <a href="#">terms of service</a> and
-            <a href="#">privacy policy</a>.
-          </p>
-          <p class="text-center text-muted">
-            Already have an account?
-            <a href="/login">Sign in</a>
-          </p>
+          <p class="accept-terms text-muted">By clicking “Create account”, you agree to our <a href="#">terms of service</a> and <a href="#">privacy policy</a>.</p>
+          <p class="text-center text-muted">Already have an account? <a href="/login">Sign in</a></p>
         </form>
       </div>
     </div>
     <footer class="footer">
       <span class="copyright">&copy; 2018 TaskAgile.com</span>
       <ul class="footer-links list-inline float-right">
-        <li class="list-inline-item">
-          <a href="#">About</a>
-        </li>
-        <li class="list-inline-item">
-          <a href="#">Terms of Service</a>
-        </li>
-        <li class="list-inline-item">
-          <a href="#">Privacy Policy</a>
-        </li>
-        <li class="list-inline-item">
-          <a href="https://github.com/taskagile/vuejs.spring-boot.mysql" target="_blank">GitHub</a>
-        </li>
+        <li class="list-inline-item"><a href="#">About</a></li>
+        <li class="list-inline-item"><a href="#">Terms of Service</a></li>
+        <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
+        <li class="list-inline-item"><a href="https://github.com/taskagile/vuejs.spring-boot.mysql" target="_blank">GitHub</a></li>
       </ul>
     </footer>
   </div>
 </template>
 
 <script>
+import registrationService from '@/services/registration'
+import { required, email, minLength, maxLength, alphaNum } from 'vuelidate/lib/validators'
+
 export default {
-  name: 'RegisterPage'
+  name: 'RegisterPage',
+  data: function () {
+    return {
+      form: {
+        username: '',
+        emailAddress: '',
+        password: ''
+      },
+      errorMessage: ''
+    }
+  },
+  // validation
+  validations: {
+    form: {
+      username: {
+        required,
+        minLength: minLength(2),
+        maxLength: maxLength(50),
+        alphaNum
+      },
+      emailAddress: {
+        required,
+        email,
+        maxLength: maxLength(100)
+      },
+      password: {
+        required,
+        minLength: minLength(6),
+        maxLength: maxLength(30)
+      }
+    }
+  },
+  methods: {
+    submitForm () {
+      this.$v.$touch()
+      if (this.$v.$invalid) {
+        return
+      }
+      registrationService.register(this.form).then(() => {
+        this.$router.push({ name: 'LoginPage' })
+      }).catch((error) => {
+        this.errorMessage = 'Failed to register user. ' + error.message
+      })
+    }
+  }
 }
 </script>
 
@@ -73,7 +122,7 @@ export default {
     line-height: 180%;
     color: #666;
   }
-  .logo {
+ .logo {
     max-width: 150px;
     margin: 0 auto;
   }
