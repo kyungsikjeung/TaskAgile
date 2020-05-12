@@ -4,10 +4,11 @@ import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class TaskAgileApplicationTests {
+public class TaskAgileApplicationTests {
 
 	@Test
-	void contextLoads() {
+	public void contextLoads() {
+		System.out.println("testtesttest");
 	}
 
 }
